@@ -14,8 +14,22 @@ else(LIBDLVSYM_LIBRARY)
     message("** INFORMATION: Your libdl does not contain dlvsym - SWT apps will not be supported")
 endif(LIBDLVSYM_LIBRARY)
 
-add_subdirectory(gtk2)
-add_subdirectory(gtk3)
+include(FindPkgConfig)
+pkg_check_modules(LIBPORTAL libportal)
+if (NOT LIBPORTAL_FOUND)
+    message(FATAL_ERROR "libportal could not be found")
+endif()
+
+option(WITH_GTK2 "Gtk+2 support" ON)
+option(WITH_GTK3 "Gtk+3 support" ON)
+
+if (WITH_GTK2)
+    add_subdirectory(gtk2)
+endif(WITH_GTK2)
+
+if (WITH_GTK3)
+    add_subdirectory(gtk3)
+endif(WITH_GTK3)
 
 message("** INFORMATION: Using installation prefix: ${CMAKE_INSTALL_PREFIX}")
 set(GTK_PORTAL_DEBUG 1)
